@@ -1,0 +1,20 @@
+Constructer--->
+Multiple constructer can have with differnt signature(signature means int type, second one is string type etc)
+using overloading(Overloading allows a programmer to use the same method name over and over, as long as the
+signature of the method is different each time
+)
+
+The signature consists of the method name and
+a parameter list
+
+
+/ different parameter list
+public void getCab (String cabbieName);
+// different parameter list
+public void getCab (int numberOfPassengers);
+
+ -------need to see in python----------
+
+
+Python does not follow overloading that what we can not declare multiple constructer;
+In case if you declare it will pickup the last one
