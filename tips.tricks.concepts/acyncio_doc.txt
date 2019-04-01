@@ -1,0 +1,116 @@
+asyncio:-> asyncio provide infrastructure for writing single-threaded concurrent code using coroutines,
+           multiplexing I/O access over sockets and other resources,runing network client and servers.
+        -> asyncio module framework that revolves around the event loop, An event loop basically waits
+           for something to happend, and then act on event, 
+           it is responsible for handling such things as I/O and system events.
+
+coroutine:->   A coroutine is a special function that can give up control to its caller without 
+               losing its state.
+
+             -> A coroutine is a consumer and an extension of a Generator.
+
+             -> One of their big benefits over threads is that they don’t use very much
+                memory to execute.
+
+             -> when you call a coroutine function, it doesn’t actually execute.
+                Instead it will return a coroutine object that you can pass to the event loop 
+                to have it executed either immediately or later on
+           
+Task : ->  A Task is a wrapper for a coroutine and a subclass of Future.
+           You can even schedule a Task using the event loop.
+	   They give you the ability to keep track of when they finish processing. 
+           Because they are a type of Future, other coroutines can wait for a task and 
+           you can also grab the result of a task when it’s done processing.
+
+async/await: -> The async/await keywords can be considered an API to be used for asynchronous programming
+
+The asyncio library was designed for network sockets.
+
+
+import asyncio
+import os
+import urllib.request
+ 
+async def download_coroutine(url):
+    #"A coroutine to download the specified url"
+    request = urllib.request.urlopen(url)
+    filename = os.path.basename(url)
+ 
+    with open(filename, 'wb') as file_handle:
+        while True:
+            chunk = request.read(1024)
+            if not chunk:
+                break
+            file_handle.write(chunk)
+    msg = 'Finished downloading {filename}'.format(filename=filename)
+    return msg
+ 
+async def main(urls):
+    """
+    Creates a group of coroutines and waits for them to finish
+    """
+    coroutines = [download_coroutine(url) for url in urls]
+    completed, pending = await asyncio.wait(coroutines)
+    for item in completed:
+        print(item.result())
+ 
+ 
+if __name__ == '__main__':
+    urls = ["http://www.irs.gov/pub/irs-pdf/f1040.pdf",
+            "http://www.irs.gov/pub/irs-pdf/f1040a.pdf",
+            "http://www.irs.gov/pub/irs-pdf/f1040ez.pdf",
+            "http://www.irs.gov/pub/irs-pdf/f1040es.pdf",
+            "http://www.irs.gov/pub/irs-pdf/f1040sb.pdf"]
+ 
+    event_loop = asyncio.get_event_loop()
+    try:
+        event_loop.run_until_complete(main(urls))
+    finally:
+        event_loop.close()
+
+We use asyncio’s wait function to wait for the coroutines to finish. Of course, 
+to actually start the coroutines, they need to be added to the event loop. 
+We do that at the very end where we get an event loop and then call its run_until_complete method.
+You will note that we pass in the main coroutine to the event loop.
+ This starts running the main coroutine which queues up the second coroutine and gets it going. 
+This is known as a chained coroutine.
+
+The problem with this example is that it really isn’t a coroutine at all. 
+The reason is that the download_coroutine function isn’t asynchronous. 
+The problem here is that urllib is not asynchronous and further, I am not using await or yield from either.
+A better way to do this would be to use the aiohttp package. Let’s look at that next!
+
+
+######################
+https://www.datacamp.com/community/tutorials/asyncio-introduction
+
+########################
+http://lucumr.pocoo.org/2016/10/30/i-dont-understand-asyncio/
+
+event loops
+event loop policies
+awaitables
+coroutine functions
+old style coroutine functions
+coroutines
+coroutine wrappers
+generators
+futures
+concurrent futures
+tasks
+handles
+executors
+transports
+protocols
+
+
+__aenter__ and __aexit__ for asynchronous with blocks
+__aiter__ and __anext__ 
+
+__await__ for custom awaitables
+
+
+
+
+
+

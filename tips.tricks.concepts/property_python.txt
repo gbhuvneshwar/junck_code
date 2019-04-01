@@ -1,0 +1,103 @@
+Here is a minimal example of how @property can be implemented:
+
+class Thing:
+    def __init__(self, my_word):
+        self._word = my_word 
+    @property
+    def word(self):
+        return self._word
+
+>>> print( Thing('ok').word )
+'ok'
+
+Otherwise word remains a method instead of a property.
+
+class Thing:
+    def __init__(self, my_word):
+        self._word = my_word
+    def word(self):
+        return self._word
+
+>>> print( Thing('ok').word())
+'ok'
+
+################################################################################################
+several built-in python descriptors including functions, properties, static methods, and class methods.
+
+A descriptor is an object attribute with “binding behavior,
+one whose attribute access has been overridden by methods (__get__(), __set__(), and __delete__()) 
+in the descriptor protocol.if any of those methods are defined for an object, it is said to be a descriptor.
+
+The default behavior for attribute access is to get, set,or delete the attribute from an object’s dictionary.
+For instance, a.x has a lookup chain starting with a.__dict__['x'], then type(a).__dict__['x'],
+and continuing through the base classes of type(a) excluding metaclasses. If the looked-up value is
+an object defining one of the descriptor methods,then Python may override the default behavior and 
+invoke the descriptor method instead.
+
+Descriptors are a powerful, general purpose protocol. They are the mechanism 
+behind properties, methods, static methods, class methods, and super().
+
+descr.__get__(self, obj, type=None) --> value
+
+descr.__set__(self, obj, value) --> None
+
+descr.__delete__(self, obj) --> None
+
+If an object defines both __get__() and __set__(), it is considered a data descriptor.
+Descriptors that only define __get__() are called non-data descriptor.
+
+To make a read-only data descriptor, define both __get__() and __set__() with the __set__() 
+raising an AttributeError when called.Defining the __set__() method with an exception
+raising placeholder is enough to make it a data descriptor.
+
+ descriptors only work for new style objects and classes. 
+A class is new style if it is a subclass of object.
+
+A descriptor can be called directly by its method name. For example, d.__get__(obj).
+
+Alternatively, it is more common for a descriptor to be invoked automatically upon attribute access. 
+For example, obj.d looks up d in the dictionary of obj. 
+If d defines the method __get__(), then d.__get__(obj) is invoked according to the precedence rules listed below.
+
+
+https://docs.python.org/2/howto/descriptor.html
+
+##################3333
+
+@property
+def x(self): ...
+is the same as
+
+def x(self): ...
+x = property(x)
+
+which, in turn, is the simplified syntax for creating a property with just a getter.
+The next step would be to extend this property with a setter and a deleter. 
+And this happens with the appropriate methods:
+
+@x.setter
+def x(self, value): ...
+returns a new property which inherits everything from the old x plus the given setter.
+
+x.deleter works the same way.
+######################
+
+Python doesn't have real private methods, so one underline in the beginning of a method or attribute means you shouldn't access this method, because it's not part of the API. It's very common when using properties:
+
+class BaseForm(StrAndUnicode):
+    ...
+
+    def _get_errors(self):
+        "Returns an ErrorDict for the data provided for the form"
+        if self._errors is None:
+            self.full_clean()
+        return self._errors
+
+    errors = property(_get_errors)
+
+
+This snippet was taken from django source code (django/forms/forms.py). 
+This means errors is a property, and it's part of the API, but the method 
+this property calls, _get_errors, is "private", so you shouldn't access it.
+
+

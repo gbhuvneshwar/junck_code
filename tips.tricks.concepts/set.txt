@@ -1,0 +1,139 @@
+-> set is datatype of dat structure with no duplicate, we can alos perfomr mathematical set operation on set.
+-> set does not support indexing
+-> set support pop operation from left to rigt
+-> set does not take any argument while pop
+-> add(any number) can add any immutable element in set
+-> you can not add any mutable object in set,  
+   because it uses the hash function to distinguish different values.
+   This means that sets only allows hashable objects
+->
+
+--> Are Python sets mutable?
+
+    Yes: "mutable" means that you can change the object.
+         For example, integers are not mutable:you cannot change the number 1 to mean anything else. 
+         You can, however, add elements to a set, which mutates it.
+
+
+-- >A set is an unordered collection of items.
+    Every element is unique (no duplicates) and must be immutable (which cannot be changed).
+    However, the set itself is mutable. We can add or remove items from it.
+
+Sets:
+                               Complexity
+Operation     | Example      | Class         | Notes
+--------------+--------------+---------------+-------------------------------
+Length        | len(s)       | O(1)	     |
+Add           | s.add(5)     | O(1)	     |
+Containment   | x in/not in s| O(1)	     | compare to list/tuple - O(N)
+Remove        | s.remove(..) | O(1)	     | compare to list/tuple - O(N)
+Discard       | s.discard(..)| O(1)	     | 
+Pop           | s.pop()      | O(1)	     | popped value "randomly" selected
+Clear         | s.clear()    | O(1)	     | similar to s = set()
+
+Construction  | set(...)     | O(len(...))   | depends on length of ... iterable
+check ==, !=  | s != t       | O(len(s))     | same as len(t); False in O(1) if
+      	      	     	       		       the lengths are different
+<=/<          | s <= t       | O(len(s))     | issubset
+>=/>          | s >= t       | O(len(t))     | issuperset s <= t == t >= s
+Union         | s | t        | O(len(s)+len(t))
+Intersection  | s & t        | O(len(s)+len(t))
+Difference    | s - t        | O(len(s)+len(t))
+Symmetric Diff| s ^ t        | O(len(s)+len(t))
+
+Iteration     | for v in s:  | O(N)          | Worst: no return/break in loop
+Copy          | s.copy()     | O(N)	     |
+
+Sets have many more operations that are O(1) compared with lists and tuples.
+Not needing to keep values in a specific order in a set (which lists/tuples
+require an order) allows for faster implementations of set operations.
+
+########################33
+
+Frozen sets support all operations that do not mutate the data structure (and
+they have the same  complexity classes).
+
+Frozen set is just an immutable version of a Python set object. 
+While elements of a set can be modified at any time, 
+elements of frozen set remains the same after creation.
+
+
+frozenset also does not support indexing.
+it remove duplicacy.
+a = frozenset((1, 1, 1, 1, 2, 2, 2)) 
+print a ---> op will be frozenset([1, 2])
+
+sss = frozenset('abc')
+sss |= set('efg')
+
+op -> frozenset(['a', 'c', 'b', 'e', 'g', 'f'])
+
+Immutable doesn't mean you can't reuse the variable name! If you run id(sss), 
+you'll see that the first sss variable represents a different object than the 
+second sss variable.
+(immutable str objects work the same way.) 
+
+##########################################33
+
+class Set:
+    def _ _init_ _(self, *args):
+        self._dict = {}
+        for arg in args:
+            self.add(arg)
+
+    def _ _repr_ _(self):
+        import string
+        elems = map(repr, self._dict.keys(  ))
+        elems.sort(  )
+        return "%s(%s)" % (self._ _class_ _._ _name_ _, string.join(elems, ', '))
+
+    def extend(self, args):
+        """ Add several items at once. """
+        for arg in args:
+            self.add(arg)
+
+    def add(self, item):
+        """ Add one item to the set. """
+        self._dict[item] = item
+
+    def remove(self, item):
+        """ Remove an item from the set. """
+        del self._dict[item]
+
+    def contains(self, item):
+        """ Check whether the set contains a certain item. """
+        return self._dict.has_key(item)
+
+    # High-performance membership test for Python 2.0 and later
+    _ _contains_ _ = contains
+
+    def _ _getitem_ _(self, index):
+        """ Support the 'for item in set:' protocol. """
+        return self._dict.keys(  )[index]
+
+    def _ _iter_ _(self):
+        """ Better support of 'for item in set:' via Python 2.2 iterators """
+        return iter(self._dict.copy(  ))
+
+    def _ _len_ _(self):
+        """ Return the number of items in the set """
+        return len(self._dict)
+
+    def items(self):
+        """ Return a list containing all items in sorted order, if possible """
+        result = self._dict.keys(  )
+        try: result.sort(  )
+        except: pass
+        return result
+
+    def _ _copy_ _(self):
+        return Set(self)
+
+
+
+def union(s1, s2):
+    import copy
+    result = copy.copy(s1)
+    for item in s2:
+        result.add(item)
+    return result

@@ -1,0 +1,28 @@
+-> tuple is a sequence of value,
+-> they can be any value
+-> they can index by integer
+->  compre to list tupe is immutable
+-> convert string into tuple using tuple keyword
+-> support max, min, len, index
+-> list an dyupe using zip
+->  comaparing tuple:
+        The relational operators work with tuples and other sequences; Python starts by comparing
+        the first element from each sequence. If they are equal, it goes on to the next elements, and
+        so on, until it finds elements that differ. Subsequent elements are not considered (even if
+        they are really big).
+        (0, 1, 2) < (0, 3, 4)
+        True
+-> sort of tuple using len of words
+
+ In CPython, tuples are stored in a single block of memory,
+ so creating a new tuple involves at worst a single call to allocate memory. 
+ Lists are allocated in two blocks: the fixed one with all the Python object information and a variable sized block for the data. 
+ 
+That's part of the reason why creating a tuple is faster, 
+ but it probably also explains the slight difference in indexing speed as there is one fewer pointer to follow.
+
+>>> import sys
+>>> sys.getsizeof(tuple(iter(range(10))))
+128
+>>> sys.getsizeof(list(iter(range(10))))
+200

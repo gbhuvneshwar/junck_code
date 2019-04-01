@@ -1,0 +1,35 @@
+software quality
+developer productivity
+Program portability
+support lib
+componenet integration in other language
+shall tool 
+control language
+ease to use
+
+-------------
+who use:
+google search engine, youtube,dropbox storahe, 
+cisco, intel etc for hardware testing
+--------------
+what can you do with python:
+System Programming
+GUI
+Internet Scripting
+Component Integration
+Database Programming: provide interface for all existing databases
+Rapid Prototyping
+Numeric and Scientific Programming
+
+--------------
+lambda functions are syntactically restricted to a single expression.
+------
+global. local, non local
+
+LEGB rule
+
+Closure
+
+
+
+

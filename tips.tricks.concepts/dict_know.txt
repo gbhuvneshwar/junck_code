@@ -1,0 +1,115 @@
+->dict is like list but in list indeces have to be integer, in a dictionary they can be any datatype
+->key-value pair, caled item
+->using dict() can create
+->for counter 
+-> mutable types like lists and dictionaries are not
+
+known = {0:0, 1:1}
+s
+def fibonacci(n):
+    if n in known:
+        return known[n]
+    res = fibonacci(n-1) + fibonacci(n-2)
+    known[n] = res
+    return res 
+
+->unordered collections; the chief distinction is that in dictionaries, items are stored and
+  fetched by key, instead of by positional offset  
+
+D['name']
+E['cto']['age']
+Indexing by key
+'age' in D Membership: key present test
+D.keys()
+D.values()
+D.items()
+D.copy()
+D.clear()
+D.update(D2)
+D.get(key, default?)
+D.pop(key, default?)
+D.setdefault(key, default?)
+D.popitem()
+Methods: all keys,
+all values,
+all key+value tuples,
+copy (top-level),
+clear (remove all items),
+
+
+len(D) Length: number of stored entries
+D[key] = 42 Adding/changing keys
+
+del D[key] Deleting entries by key
+
+list(D.keys())
+
+D1.keys() & D2.keys()
+
+Dictionary views (Python 3.X)
+
+D.viewkeys(), D.viewvalues() Dictionary views (Python 2.7)
+
+D = {x: x*2 for x in range(10)} Dictionary comprehensions (Python 3.X, 2.7)
+
+
+
+Dictionaries: dict and defaultdict
+                               Complexity
+Operation     | Example      | Class         | Notes
+--------------+--------------+---------------+-------------------------------
+Index         | d[k]         | O(1)	     |
+Store         | d[k] = v     | O(1)	     |
+Length        | len(d)       | O(1)	     |
+Delete        | del d[k]     | O(1)	     |
+get/setdefault| d.get(k)     | O(1)	     |
+Pop           | d.pop(k)     | O(1)	     | popped key "randomly" selected
+Pop item      | d.popitem()  | O(1)	     | popped item "randomly" selected
+Clear         | d.clear()    | O(1)	     | similar to s = {} or = dict()
+View          | d.keys()     | O(1)	     | same for d.values()
+
+Construction  | dict(...)    | O(len(...))   | depends # (key,value) 2-tuples
+
+Iteration     | for k in d:  | O(N)          | all forms: keys, values, items
+	      	      	       		     | Worst: no return/break in loop
+So, most dict operations are O(1).
+
+defaultdicts support all operations that dicts support, with the same
+complexity classes (because it inherits all those operations); this assumes that
+calling the constructor when a values isn't found in the defaultdict is O(1) -
+which is true for int(), list(), set(), ... (the things we commonly use)
+
+Note that for i in range(...) is O(len(...)); so for i in range(1,10) is O(1).
+If len(alist) is N, then
+
+  for i in range(len(alist)):
+
+is O(N) because it loops N times. Of course even 
+
+  for i in range (len(alist)//2):
+
+is O(N) because it loops N/2 times, and dropping the constant 1/2 makes
+it O(N): the work doubles when the list length doubles. By this reasoning,
+
+  for i in range (len(alist)//1000000):
+
+is O(N) because it loops N/1000000 times, and dropping the constant 1000000
+makes  it O(N): the work doubles when the list length doubles.
+
+Finally, when comparing two lists for equality, the complexity class above
+shows as O(N), but in reality we would need to multiply this complexity class by
+O==(...) where O==(...) is the complexity class for checking whether two values
+in the list are ==. If they are ints, O==(...) would be O(1); if they are
+strings, O==(...) in the worst case it would be O(len(string)). This issue
+applies any time an == check is done. We mostly will assume == checking on
+values in lists is O(1): e.g., checking ints and small/fixed-length strings.
+
+
+---> time comlexity for checking key is in dictiory:
+    hash function, this time complexity should be O(1) avg. case for lookup.
+    Worst case it can be O(n) (case where the hash function always leads to collision)
+    but this should be rare.
+
+-->   If you are guaranteed that keys are unique,
+     then insertions in a chained hash table would just be O(1) amortized time complexity,
+      since the time complexity no longer depends on the input.

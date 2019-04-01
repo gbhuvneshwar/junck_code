@@ -1,0 +1,7 @@
+from collections import Iterable
+
+if isinstance(e, collections.Iterable):
+    # e is iterable
+
+
+used to check wehter object is iterable or not.

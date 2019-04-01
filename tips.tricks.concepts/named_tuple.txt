@@ -1,0 +1,107 @@
+Namedtuple in Python
+Python supports a type of container like dictionaries called “namedtuples()” present in module, “collection“.
+Like dictionaries they contain keys that are hashed to a particular value.
+But on contrary, it supports both access from key value and iteration, 
+the functionality that dictionaries lack.
+
+Operations on namedtuple() :
+
+Access Operations
+1. Access by index : The attribute values of namedtuple() are ordered and
+                     can be accessed using the index number unlike dictionaries 
+                     which are not accessible by index.
+
+2. Access by keyname : Access by keyname is also allowed as in dictionaries.
+
+3. using getattr() :- This is yet another way to access the value by giving namedtuple and
+                      key value as its argument.
+
+
+import collections 
+  
+# Declaring namedtuple() 
+Student = collections.namedtuple('Student',['name','age','DOB']) 
+  
+# Adding values 
+S = Student('Nandini','19','2541997') 
+  
+# Access using index 
+print ("The Student age using index is : ",end ="") 
+print (S[1]) 
+  
+# Access using name  
+print ("The Student name using keyname is : ",end ="") 
+print (S.name) 
+  
+# Access using getattr() 
+print ("The Student DOB using getattr() is : ",end ="") 
+print (getattr(S,'DOB')) 
+Run on IDE
+
+Output :
+
+The Student age using index is : 19
+The Student name using keyname is : Nandini
+The Student DOB using getattr() is : 2541997
+
+namedtuple instances are just as memory efficient as regular tuples because 
+they do not have per-instance dictionaries. Each kind of namedtuple is represented by 
+its own class, created by using the namedtuple() factory function. 
+#############
+
+The arguments are the name of the new class and a string containing the names of the elements.
+
+
+In dicts, only the keys have to be hashable, not the values. 
+namedtuples don't have keys, so hashability isn't an issue.
+
+However, they have a more stringent restriction -- their key-equivalents, "field names", have to be strings.
+
+Basically, if you were going to create a bunch of instances of a class like:
+
+class Container:
+    def __init__(self, name, date, foo, bar):
+        self.name = name
+        self.date = date
+        self.foo = foo
+        self.bar = bar
+
+mycontainer = Container(name, date, foo, bar)
+and not change the attributes after you set them in __init__, you could instead use
+
+Container = namedtuple('Container', ['name', 'date', 'foo', 'bar'])
+
+mycontainer = Container(name, date, foo, bar)
+
+Tuples are immutable, whether named or not. namedtuple only makes the 
+access more convenient, by using names instead of indices.
+You can only use valid identifiers for namedtuple, it doesn't perform any hashing —
+it generates a new type instead.
+
+Finally, namedtuples are ordered, unlike regular dicts
+
+
+from collections import namedtuple
+
+Animal = namedtuple('Animal', 'name age type')
+perry = Animal(name="perry", age=31, type="cat")
+
+print(perry)
+# Output: Animal(name='perry', age=31, type='cat')
+
+print(perry.name)
+# Output: 'perry'
+
+Well, so now what are namedtuples? They turn tuples into convenient containers for simple tasks. 
+With namedtuples you don’t have to use integer indexes for accessing members of a tuple.
+You can think of namedtuples like dictionaries but unlike dictionaries they are immutable.
+
+you can convert a namedtuple to a dictionary. Like this:
+
+from collections import namedtuple
+
+Animal = namedtuple('Animal', 'name age type')
+perry = Animal(name="perry", age=31, type="cat")
+perry._asdict()
+# Output: OrderedDict([('name', 'perry'), 
+# ('age', 31), ('type', 'cat')])

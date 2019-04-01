@@ -1,0 +1,59 @@
+One of the major challenges in writing (somewhat) large-scale Python programs 
+is to keep memory usage at a minimum.
+
+However, managing memory in Python is easy—if you just don’t care.
+Python allocates memory transparently, manages objects using a reference count system, 
+and frees memory when an object’s reference count falls to zero.
+
+Let us focus on the 64-bit version (mainly because 
+that’s what we need the most often in our case). None takes 16 bytes. 
+int takes 24 bytes, three times as much memory as a C
+
+An empty string costs 37 bytes in a 64-bit environment! Memory used by
+string then linearly grows in the length of the (useful) string
+
+Why does all this matter? It seems that whether an empty string takes 8 bytes or 37 doesn’t change anything much. 
+That’s true. That’s true until you need to scale. Then, you need to be really careful about how many objects you 
+screate to limit the quantity of memory your program uses. It is a problem in real-life applications
+
+
+#########################
+import copy
+import memory_profiler
+
+@profile
+def function():
+    x = list(range(1000000))  # allocate a big list
+    y = copy.deepcopy(x)
+    del x
+    return y
+
+if __name__ == "__main__":
+    function()
+invoking
+
+python -m memory_profiler memory-profile-me.py
+prints, on a 64-bit computer
+
+Filename: memory-profile-me.py
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+     4                             @profile
+     5      9.11 MB      0.00 MB   def function():
+     6     40.05 MB     30.94 MB       x = list(range(1000000)) # allocate a big list
+     7     89.73 MB     49.68 MB       y = copy.deepcopy(x)
+     8     82.10 MB     -7.63 MB       del x
+     9     82.10 MB      0.00 MB       return y
+
+This program creates a list of n=1,000,000 ints (n x 24 bytes = ~23 MB) 
+and an additional list of references (n x 8 bytes = ~7.6 MB), 
+which amounts to a total memory usage of ~31 MB. 
+copy.deepcopy copies both lists, which allocates again ~50 MB 
+(I am not sure where the additional overhead of 50 MB - 31 MB = 19 MB comes from).
+The interesting part is del x: it deletes x, but the memory usage only decreases by 7.63 MB!
+This is because del only deletes the reference list, not the actual integer values,
+which remain on the heap and cause a memory overhead of ~23 MB.
+
+This example allocates in total ~73 MB, which is more than twice the amount of memory needed to store a single list
+of ~31 MB. You can see that memory can increase surprisingly if you are not careful!

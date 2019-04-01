@@ -1,0 +1,7 @@
+class threading.local
+
+class _RunningLoop(threading.local):
+    loop_pid = (None, None)
+
+A class that represents thread-local data. Thread-local data are data whose values are thread specific. 
+To manage thread-local data, just create an instance of local (or a subclass) and store attributes on it:
